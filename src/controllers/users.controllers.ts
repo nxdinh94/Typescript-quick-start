@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import databaseService from "~/services/database.services"
 import User from "~/models/schemas/User.schema"
 import userService from "~/services/users.services"
@@ -17,18 +17,12 @@ export const loginController = (req: Request, res: Response) =>{
     })
 }
 
-export const registerController = async (req: Request<ParamsDictionary, any, RegisterRequestBody>, res: Response) =>{
-    
-    try{
-        const result = await userService.register(req.body)
-        return res.json({
-            result
-        })
-    }catch(error){
-        return res.status(400).json({
-            msg:"Register failed"
-        })
-    }   
-}
+export const registerController = async (
+    req: Request<ParamsDictionary, any, RegisterRequestBody>, 
+    res: Response,
+    next: NextFunction
+) =>{
+    const result = await userService.register(req.body)
+    return res.json({msg: 'Register successfully',result})} 
 
 
