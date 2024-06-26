@@ -3,7 +3,7 @@ import { MongoClient, ServerApiVersion, Db, Collection } from 'mongodb';
 import 'dotenv/config'
 import User from '~/models/schemas/User.schema'
 
-const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@test.ckxh0gq.mongodb.net/?appName=test`;
+const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@test.ckxh0gq.mongodb.net/?retryWrites=true&w=majority&appName=test`;
 
 class DatabaseService{
     private client : MongoClient
