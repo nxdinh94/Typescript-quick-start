@@ -10,7 +10,7 @@ export const validate = (validation: RunnableValidationChains<ValidationChain>) 
     await validation.run(req)
     const errors = validationResult(req)
     if(errors.isEmpty()){
-      next()
+      return next()
     }
     // if errors return 422 errors
     const errorsObject = errors.mapped()
@@ -18,10 +18,10 @@ export const validate = (validation: RunnableValidationChains<ValidationChain>) 
     for(const key in errorsObject){
       const {msg} = errorsObject[key]
       if(msg instanceof ErrorWithStatus && msg.status !== HTTP_STATUS.UNPROCESSABLE_ENTITY){
-        next(msg)
+        return next(msg)
       }
       entityError.errors[key] = errorsObject[key]
     }
-    next(entityError)
+    return next(entityError)
   };
 };

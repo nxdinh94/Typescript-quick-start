@@ -5,7 +5,7 @@ import { wrapRequestHandler } from '~/ultils/handler'
 
 const usersRouters = express.Router()
 
-usersRouters.post('/login', loginValidator, loginController)
+usersRouters.post('/login', loginValidator, wrapRequestHandler(loginController))
 
 /**
  * Description: register a new user
