@@ -4,6 +4,8 @@ import { RegisterRequestBody } from "~/models/requests/User.requests";
 import { hashPassword } from "~/ultils/crypto";
 import { signToken } from "~/ultils/jwt";
 import { TokenType } from "~/constants/enum";
+import RefreshToken from "~/models/schemas/RefreshToken.schema";
+import { ObjectId } from "mongodb";
 
 class UsersService{
     private signAccessToken(user_id: string){
@@ -43,6 +45,9 @@ class UsersService{
         const result = await databaseService.users.insertOne(newUser)
         const user_id = result.insertedId.toString()
         const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id)
+        await databaseService.refreshToken.insertOne(new RefreshToken({
+            user_id : new ObjectId(user_id), token: refresh_token
+        }))
         return {access_token, refresh_token}
     }
     async checkEmailExist(email: string){
@@ -51,6 +56,9 @@ class UsersService{
     } 
     async login(user_id: string){
         const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id)
+        await databaseService.refreshToken.insertOne(new RefreshToken({
+            user_id : new ObjectId(user_id), token: refresh_token
+        }))
         return {access_token, refresh_token}
     }
 }
