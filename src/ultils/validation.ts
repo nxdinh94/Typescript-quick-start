@@ -12,6 +12,7 @@ export const validate = (validation: RunnableValidationChains<ValidationChain>) 
     if(errors.isEmpty()){
       return next()
     }
+
     // if errors return 422 errors
     const errorsObject = errors.mapped()
     const entityError = new EntityError({errors : {}})
