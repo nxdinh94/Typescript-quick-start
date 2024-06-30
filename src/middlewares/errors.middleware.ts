@@ -8,7 +8,6 @@ export const defaultErrorHandler = (error: any, req: Request, res: Response, nex
     // console.log(error instanceof ErrorWithStatus);
     // console.log(error);
     if(error instanceof ErrorWithStatus){
-        console.log(error);
         return res.status(error.status).json(omit(error, ['status']))
     }
     

@@ -23,5 +23,9 @@ export const USERS_MESSAGES = {
     REGISTER_FAIL: 'Register fail',
     EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email or password is incorrect',
     ACCESS_TOKEN_IS_REQUIRED: 'Access token is required',
-
+    ACCESS_TOKEN_IS_INVALID: 'Access token is required',
+    REFRESH_TOKEN_IS_INVALID: 'Refrsh token is invalid',
+    REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',
+    USED_REFRESH_TOKEN_OR_NOT_EXISTS : 'Refresh token đã được sử dụng hoặc không tồn tại',
+    LOGOUT_SUCCESS: 'Logout success'
 } as const
