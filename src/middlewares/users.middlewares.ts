@@ -2,6 +2,7 @@ import {Request, Response, NextFunction } from "express"
 import { check, checkSchema } from "express-validator"
 import { JsonWebTokenError } from "jsonwebtoken"
 import { capitalize } from "lodash"
+import exp from "node:constants"
 import HTTP_STATUS from "~/constants/httpStatus"
 import { USERS_MESSAGES } from "~/constants/messages"
 import { ErrorWithStatus } from "~/models/Errors"
@@ -260,3 +261,4 @@ export const emailVerifyTokenValidator = validate(
         },
     })
 )
+

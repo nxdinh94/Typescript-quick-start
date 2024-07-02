@@ -1,6 +1,15 @@
 import { JwtPayload } from "jsonwebtoken"
 import { TokenType } from "~/constants/enum"
 
+export interface LoginReqBody{
+    email: string
+    password: string
+}
+
+export interface VerifyEmailReqBody{
+    email_verify_token: string
+}
+
 export interface RegisterRequestBody{
     name: string
     email: string

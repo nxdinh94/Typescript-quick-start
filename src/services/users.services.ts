@@ -65,9 +65,11 @@ class UsersService{
         await databaseService.users.insertOne(newUser)
         const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id.toString())
         await databaseService.refreshToken.insertOne(
-            new RefreshToken({user_id : new ObjectId(user_id), 
-            token: refresh_token
-        }))
+            new RefreshToken({
+                user_id : new ObjectId(user_id), 
+                token: refresh_token
+            })
+        )
         console.log('email_verified_token', email_verify_token);
         return {access_token, refresh_token}
     }
@@ -95,7 +97,13 @@ class UsersService{
             databaseService.users.updateOne(
                 {_id: new ObjectId(user_id)},
                 {
-                    $set: {email_verify_token: '', verify: UserVerifyStatus.Verrified, updated_at: new Date()}
+                    $set: {
+                        email_verify_token: '', 
+                        verify: UserVerifyStatus.Verrified
+                    },
+                    $currentDate:{
+                        updated_at: true
+                    }
                 }
             )
         ])
@@ -103,6 +111,28 @@ class UsersService{
         return {
             access_token, refresh_token
         }
+    }
+    async resendVerifyEmail(user_id: string){
+        // gia su gui email bang console log
+        const email_verify_token = await this.signEmailVerifyToken(user_id)
+        console.log('resend verify email: ', email_verify_token);
+
+        // update email-verify-token in collection
+        const result = await databaseService.users.updateOne(
+            {_id: new ObjectId(user_id)},
+            {
+                $set: {
+                    email_verify_token,
+                },
+                $currentDate: {
+                    updated_at: true
+                }
+            }
+        )
+        return {
+            message: USERS_MESSAGES.RESEND_VERIFY_EMAIL_SUCCESS
+        }
+
     }
 }
 

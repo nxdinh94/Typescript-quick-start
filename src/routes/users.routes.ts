@@ -1,5 +1,5 @@
 import express, {Request, Response, NextFunction, ErrorRequestHandler} from 'express'
-import { emailVerifyValidatorController, loginController, logoutController, registerController } from '~/controllers/users.controllers'
+import { emailVerifyController, loginController, logoutController, registerController, resendEmailVerifyController } from '~/controllers/users.controllers'
 import { accessTokenValidator, emailVerifyTokenValidator, loginValidator, refreshTokenValidator, registerValidator,  } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/ultils/handler'
 
@@ -36,7 +36,14 @@ usersRouters.post('/logout',refreshTokenValidator ,accessTokenValidator, wrapReq
  * Method: Post
  * Body: {email-verify-token: string}
  */
-usersRouters.post('/verify-email' ,emailVerifyTokenValidator, wrapRequestHandler(emailVerifyValidatorController))
+usersRouters.post('/verify-email' ,emailVerifyTokenValidator, wrapRequestHandler(emailVerifyController))
+/**
+ * Description: Verify email when user click on the link in email 
+ * Path /resend-verify-email
+ * Method: Post
+ * Body:{}
+ */
+usersRouters.post('/resend-verify-email' ,accessTokenValidator ,wrapRequestHandler(resendEmailVerifyController))
 
 
 

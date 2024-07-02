@@ -1,0 +1,12 @@
+*   gọi api đăng kí tài khoản -> tự tạo id cho collection đó để dùng tiếp thay vì để mongodb tự tạo -> 
+    -> nếu đăng ký thành công, dùng id đó để tạo email_verify_token ->lưu token vào db ->  gọi api email_verify_token 
+    -> truyền email_verify_token vào , decode token, lấy userId, kiểm tra trong db có tồn tại user đó không, nếu có tiếp tục 
+    kiểm tra email_verify_token nếu tồn tại email_verify_token thì reset về null và trả về kết quả verify email thành công
+
+
+
+
+
+
+
+
