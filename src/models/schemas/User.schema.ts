@@ -10,7 +10,7 @@ interface UserType{
     created_at?: Date,
     updated_at?: Date,
     email_verify_token?: string,
-    forget_password_token?:string,
+    forgot_password_token?:string,
     verify?: UserVerifyStatus
 
     bio?: String,        //optional
@@ -30,7 +30,7 @@ export default class User{
     created_at: Date
     updated_at: Date
     email_verify_token: string
-    forget_password_token:string
+    forgot_password_token:string
     verify: UserVerifyStatus
 
     bio: String
@@ -50,7 +50,7 @@ export default class User{
         this.created_at = user.created_at   || now
         this.updated_at = user.updated_at   || now
         this.email_verify_token = user.email_verify_token   || ''
-        this.forget_password_token = user.forget_password_token  || ''
+        this.forgot_password_token = user.forgot_password_token  || ''
         this.verify = user.verify  || 0
         this.bio = user.bio  || ''
         this.location = user.location  || ''
