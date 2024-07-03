@@ -4,7 +4,7 @@
     kiểm tra email_verify_token nếu tồn tại email_verify_token thì reset về null và trả về kết quả verify email thành công
 
 *   gọi api forgot password -> trả về forgot-password-token -> gọi api verify-forgot-password để verify token đó -> nếu token có trong collect của user hoặc
-chưa hết hạn thì verify thành công
+chưa hết hạn thì verify thành công -> gọi api reset-password truyền forgot_password_token, password, confirm_password, sau đó set '' cho trường forgot_password_token
 
 
 

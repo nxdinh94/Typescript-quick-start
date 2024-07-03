@@ -1,6 +1,6 @@
-import express, {Request, Response, NextFunction, ErrorRequestHandler} from 'express'
-import { emailVerifyController, forgotPasswordController, loginController, logoutController, registerController, resendEmailVerifyController, resetPasswordController, verifyForgotPasswordController } from '~/controllers/users.controllers'
-import { accessTokenValidator, emailVerifyTokenValidator, forgotPasswordValidator, loginValidator, refreshTokenValidator, registerValidator, resetValidator, verifyForgotPasswordTokenValidator,  } from '~/middlewares/users.middlewares'
+import express from 'express'
+import { emailVerifyController, forgotPasswordController, getMeController, loginController, logoutController, registerController, resendEmailVerifyController, resetPasswordController, updateMeController, verifyForgotPasswordController } from '~/controllers/users.controllers'
+import { accessTokenValidator, emailVerifyTokenValidator, forgotPasswordValidator, loginValidator, refreshTokenValidator, registerValidator, resetValidator, verifiedUserValidator, verifyForgotPasswordTokenValidator, } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/ultils/handler'
 
 const usersRouters = express.Router()
@@ -66,6 +66,22 @@ usersRouters.post('/verify-forgot-password', verifyForgotPasswordTokenValidator,
  * Body:{forgot_password_token: string, password:string, confirm_password:string}
  */
 usersRouters.post('/reset-password', resetValidator, wrapRequestHandler(resetPasswordController))
+/**
+ * Description: get my profile
+ * Path /me
+ * Method: Get
+ * Header: {Authorization: Bearer<access_token>}
+ */
+usersRouters.get('/me', accessTokenValidator, wrapRequestHandler(getMeController))
+
+/**
+ * Description: update my profile
+ * Path /me
+ * Method: Patch
+ * Header: {Authorization: Bearer<access_token>}
+ * Body: UserSchema
+ */
+usersRouters.patch('/me', accessTokenValidator, verifiedUserValidator ,wrapRequestHandler(updateMeController))
 
 
 
