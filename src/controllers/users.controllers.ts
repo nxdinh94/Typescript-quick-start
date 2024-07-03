@@ -3,7 +3,7 @@ import databaseService from "~/services/database.services"
 import User from "~/models/schemas/User.schema"
 import userService from "~/services/users.services"
 import {ParamsDictionary} from 'express-serve-static-core'
-import { ForgotPasswordReqBody, LoginReqBody, LogoutReqBody, RegisterRequestBody, TokenPayload, VerifyEmailReqBody } from "~/models/requests/User.requests"
+import { ForgotPasswordReqBody, LoginReqBody, LogoutReqBody, RegisterRequestBody, TokenPayload, VerifyEmailReqBody, VerifyForgotPasswordReqBody } from "~/models/requests/User.requests"
 import { USERS_MESSAGES } from "~/constants/messages"
 import { ObjectId } from "mongodb"
 import HTTP_STATUS from "~/constants/httpStatus"
@@ -83,7 +83,16 @@ export const forgotPasswordController = async(
     next: NextFunction
 ) =>{
     const {_id} = req.user as User
-    console.log(req.body);
     const result  = await userService.forgotPassword((_id as ObjectId).toString())
     return res.json(result)
+}
+
+export const verifyForgotPasswordController = async(
+    req: Request<ParamsDictionary, any, VerifyForgotPasswordReqBody>, 
+    res: Response, 
+    next: NextFunction
+) =>{
+    return res.json({
+        message: USERS_MESSAGES.VERIFIED_FORGOT_PASSWORD_SUCCESS
+    })
 }
