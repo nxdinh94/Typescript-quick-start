@@ -1,12 +1,12 @@
-import User from "~/models/schemas/User.schema";
-import databaseService from "./database.services"
+import { ObjectId } from "mongodb";
+import { TokenType, UserVerifyStatus } from "~/constants/enum";
+import { USERS_MESSAGES } from "~/constants/messages";
 import { RegisterRequestBody } from "~/models/requests/User.requests";
+import RefreshToken from "~/models/schemas/RefreshToken.schema";
+import User from "~/models/schemas/User.schema";
 import { hashPassword } from "~/ultils/crypto";
 import { signToken } from "~/ultils/jwt";
-import { TokenType, UserVerifyStatus } from "~/constants/enum";
-import RefreshToken from "~/models/schemas/RefreshToken.schema";
-import { ObjectId } from "mongodb";
-import { USERS_MESSAGES } from "~/constants/messages";
+import databaseService from "./database.services";
 
 class UsersService{
     private signAccessToken(user_id: string){
@@ -163,6 +163,24 @@ class UsersService{
         console.log('forgot-password-token', forgot_password_token);
         return {
             message: USERS_MESSAGES.CHECK_EMAIL_TO_RESET_PASSWORD
+        }
+    }
+    async resetPassword(user_id: string, password: string){
+        await databaseService.users.updateOne(
+            {_id: new ObjectId(user_id)},
+            {
+                $set: {
+                    forgot_password_token: '',
+                    password: hashPassword(password),
+                    verify: UserVerifyStatus.Verrified
+                },
+                $currentDate: {
+                    updated_at: true
+                }
+            }
+        )
+        return {
+            message : USERS_MESSAGES.RESET_PASSWORD_SUCCESS
         }
     }
 }
