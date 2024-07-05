@@ -3,7 +3,7 @@ import databaseService from "~/services/database.services"
 import User from "~/models/schemas/User.schema"
 import userService from "~/services/users.services"
 import {ParamsDictionary} from 'express-serve-static-core'
-import { ForgotPasswordReqBody, LoginReqBody, LogoutReqBody, RegisterRequestBody, ResetPaswordReqBody, TokenPayload, UpdateMeReqBody, VerifyEmailReqBody, VerifyForgotPasswordReqBody } from "~/models/requests/User.requests"
+import { ForgotPasswordReqBody, GetProfileReqParams, LoginReqBody, LogoutReqBody, RegisterRequestBody, ResetPaswordReqBody, TokenPayload, UpdateMeReqBody, VerifyEmailReqBody, VerifyForgotPasswordReqBody } from "~/models/requests/User.requests"
 import { USERS_MESSAGES } from "~/constants/messages"
 import { ObjectId } from "mongodb"
 import HTTP_STATUS from "~/constants/httpStatus"
@@ -130,6 +130,18 @@ export const updateMeController = async (
     const user = await userService.updateMe(user_id, body);
     return res.json({
         message: USERS_MESSAGES.UPDATE_ME_SUCCESS,
+        result: user
+    })
+}
+export const getProfileController = async (
+    req: Request<ParamsDictionary, any, GetProfileReqParams>, 
+    res: Response, 
+    next: NextFunction
+) =>{
+    const {username} = req.params 
+    const user = await userService.getProfile(username);
+    return res.json({
+        message: USERS_MESSAGES.GET_PROFILE_SUCCESS,
         result: user
     })
 }
