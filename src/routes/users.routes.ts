@@ -1,7 +1,7 @@
 import express from 'express'
-import { emailVerifyController, followUserController, forgotPasswordController, getMeController, getProfileController, loginController, logoutController, registerController, resendEmailVerifyController, resetPasswordController, updateMeController, verifyForgotPasswordController } from '~/controllers/users.controllers'
+import { emailVerifyController, followUserController, forgotPasswordController, getMeController, getProfileController, loginController, logoutController, registerController, resendEmailVerifyController, resetPasswordController, unFollowUserController, updateMeController, verifyForgotPasswordController } from '~/controllers/users.controllers'
 import { filterMiddleware } from '~/middlewares/common.middlewares'
-import { accessTokenValidator, emailVerifyTokenValidator, followValidator, forgotPasswordValidator, loginValidator, refreshTokenValidator, registerValidator, resetValidator, updateMeVaidator, verifiedUserValidator, verifyForgotPasswordTokenValidator, } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, emailVerifyTokenValidator, followValidator, forgotPasswordValidator, loginValidator, refreshTokenValidator, registerValidator, resetValidator, unFollowValidator, updateMeVaidator, verifiedUserValidator, verifyForgotPasswordTokenValidator, } from '~/middlewares/users.middlewares'
 import { UpdateMeReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/ultils/handler'
 
@@ -115,7 +115,7 @@ usersRouters.post('/follow', accessTokenValidator, verifiedUserValidator, follow
  * Header: 
  * Body: {followed_user_id: string}
  */
-usersRouters.delete('/follow/:user_id', accessTokenValidator, verifiedUserValidator, followValidator, wrapRequestHandler(followUserController)) 
+usersRouters.delete('/follow/:user_id', accessTokenValidator, verifiedUserValidator, unFollowValidator, wrapRequestHandler(unFollowUserController)) 
 
 
 
