@@ -1,6 +1,8 @@
 import express from 'express'
 import { emailVerifyController, forgotPasswordController, getMeController, loginController, logoutController, registerController, resendEmailVerifyController, resetPasswordController, updateMeController, verifyForgotPasswordController } from '~/controllers/users.controllers'
+import { filterMiddleware } from '~/middlewares/common.middlewares'
 import { accessTokenValidator, emailVerifyTokenValidator, forgotPasswordValidator, loginValidator, refreshTokenValidator, registerValidator, resetValidator, updateMeVaidator, verifiedUserValidator, verifyForgotPasswordTokenValidator, } from '~/middlewares/users.middlewares'
+import { UpdateMeReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/ultils/handler'
 
 const usersRouters = express.Router()
@@ -81,7 +83,14 @@ usersRouters.get('/me', accessTokenValidator, wrapRequestHandler(getMeController
  * Header: {Authorization: Bearer<access_token>}
  * Body: UserSchema
  */
-usersRouters.patch('/me', accessTokenValidator, verifiedUserValidator, updateMeVaidator, wrapRequestHandler(updateMeController))
+usersRouters.patch(
+    '/me', 
+    accessTokenValidator, 
+    verifiedUserValidator, 
+    updateMeVaidator, 
+    filterMiddleware<UpdateMeReqBody>(['avatar', 'bio', 'cover_photo', 'date_of_birth', 'location', 'name', 'username', 'website']), 
+    wrapRequestHandler(updateMeController)
+)
 
 
 
