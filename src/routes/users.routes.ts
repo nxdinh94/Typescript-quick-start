@@ -1,7 +1,7 @@
 import express from 'express'
-import { emailVerifyController, forgotPasswordController, getMeController, getProfileController, loginController, logoutController, registerController, resendEmailVerifyController, resetPasswordController, updateMeController, verifyForgotPasswordController } from '~/controllers/users.controllers'
+import { emailVerifyController, followUserController, forgotPasswordController, getMeController, getProfileController, loginController, logoutController, registerController, resendEmailVerifyController, resetPasswordController, updateMeController, verifyForgotPasswordController } from '~/controllers/users.controllers'
 import { filterMiddleware } from '~/middlewares/common.middlewares'
-import { accessTokenValidator, emailVerifyTokenValidator, forgotPasswordValidator, loginValidator, refreshTokenValidator, registerValidator, resetValidator, updateMeVaidator, verifiedUserValidator, verifyForgotPasswordTokenValidator, } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, emailVerifyTokenValidator, followValidator, forgotPasswordValidator, loginValidator, refreshTokenValidator, registerValidator, resetValidator, updateMeVaidator, verifiedUserValidator, verifyForgotPasswordTokenValidator, } from '~/middlewares/users.middlewares'
 import { UpdateMeReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/ultils/handler'
 
@@ -91,6 +91,7 @@ usersRouters.patch(
     filterMiddleware<UpdateMeReqBody>(['avatar', 'bio', 'cover_photo', 'date_of_birth', 'location', 'name', 'username', 'website']), 
     wrapRequestHandler(updateMeController)
 ) 
+
 /**
  * Description: get user profile
  * Path /:username
@@ -99,6 +100,22 @@ usersRouters.patch(
  * Body: 
  */
 usersRouters.get('/:username', wrapRequestHandler(getProfileController)) 
+/**
+ * Description: follow user
+ * Path /follow
+ * Method: Post
+ * Header: 
+ * Body: {followed_user_id: string}
+ */
+usersRouters.post('/follow', accessTokenValidator, verifiedUserValidator, followValidator,wrapRequestHandler(followUserController)) 
+/**
+ * Description: Unfollow user
+ * Path /follow/:user_id
+ * Method: Delete
+ * Header: 
+ * Body: {followed_user_id: string}
+ */
+usersRouters.delete('/follow/:user_id', accessTokenValidator, verifiedUserValidator, followValidator, wrapRequestHandler(followUserController)) 
 
 
 

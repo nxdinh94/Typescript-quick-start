@@ -30,6 +30,9 @@ export interface ForgotPasswordReqBody{
 export interface GetProfileReqParams{
     username: string
 }
+export interface FollowUserReqBody{
+    followed_user_id: string
+}
 export interface VerifyForgotPasswordReqBody{
     forgot_password_token: string
 }

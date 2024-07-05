@@ -3,7 +3,7 @@ import databaseService from "~/services/database.services"
 import User from "~/models/schemas/User.schema"
 import userService from "~/services/users.services"
 import {ParamsDictionary} from 'express-serve-static-core'
-import { ForgotPasswordReqBody, GetProfileReqParams, LoginReqBody, LogoutReqBody, RegisterRequestBody, ResetPaswordReqBody, TokenPayload, UpdateMeReqBody, VerifyEmailReqBody, VerifyForgotPasswordReqBody } from "~/models/requests/User.requests"
+import { FollowUserReqBody, ForgotPasswordReqBody, GetProfileReqParams, LoginReqBody, LogoutReqBody, RegisterRequestBody, ResetPaswordReqBody, TokenPayload, UpdateMeReqBody, VerifyEmailReqBody, VerifyForgotPasswordReqBody } from "~/models/requests/User.requests"
 import { USERS_MESSAGES } from "~/constants/messages"
 import { ObjectId } from "mongodb"
 import HTTP_STATUS from "~/constants/httpStatus"
@@ -144,4 +144,14 @@ export const getProfileController = async (
         message: USERS_MESSAGES.GET_PROFILE_SUCCESS,
         result: user
     })
+}
+export const followUserController = async (
+    req: Request<ParamsDictionary, any, FollowUserReqBody>, 
+    res: Response, 
+    next: NextFunction
+) =>{
+    const {user_id} = req.decoded_authorization as TokenPayload
+    const {followed_user_id} = req.body
+    const result = await userService.follow(user_id, followed_user_id)
+    return res.json(result)
 }
