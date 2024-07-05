@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb"
 import { UserVerifyStatus } from "~/constants/enum"
 import HTTP_STATUS from "~/constants/httpStatus"
 import { USERS_MESSAGES } from "~/constants/messages"
+import { REGEX_USERNAME } from "~/constants/regex"
 import { ErrorWithStatus } from "~/models/Errors"
 import { TokenPayload } from "~/models/requests/User.requests"
 import databaseService from "~/services/database.services"
@@ -430,16 +431,24 @@ export const updateMeVaidator = validate(
             },
             trim: true,
         },
-        userName: {
+        username: {
             optional: true,
             isString: {
                 errorMessage: USERS_MESSAGES.USERNAME_MUST_BE_STRING
             },
-            isLength:{
-                options:{
-                    min: 1, max: 200
-                },
-                errorMessage : USERS_MESSAGES.USERNAME_LENGTH_MUST_BE_FROM_1_TO_50
+            custom : {
+                options : async(value: string, {req})=>{
+                    if(REGEX_USERNAME.test(value) === false){
+                        throw Error(USERS_MESSAGES.USERNAME_IS_INVALID)
+                    }
+                    const user = await databaseService.users.findOne({
+                        username: value
+                    })
+                    // if exists username in db, we dont allow to update
+                    if(user){
+                        throw Error(USERS_MESSAGES.USERNAME_EXISTED)
+                    }
+                }
             },
             trim: true,
         },
