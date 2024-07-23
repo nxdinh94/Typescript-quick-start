@@ -4,6 +4,7 @@ import 'dotenv/config'
 import User from '~/models/schemas/User.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import Follower from '~/models/schemas/Follower.schema';
+import Tweet from '~/models/schemas/Tweet.schema';
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@test.ckxh0gq.mongodb.net/?retryWrites=true&w=majority&appName=test`;
 
@@ -33,6 +34,9 @@ class DatabaseService{
 
     get users() : Collection<User>{
         return this.db.collection(`${process.env.DB_USER_COLLECTION}`)
+    }
+    get tweets() : Collection<Tweet>{
+        return this.db.collection(`${process.env.DB_TWEETS_COLLECTION}`)
     }
 
     get refreshToken():Collection<RefreshToken>{
