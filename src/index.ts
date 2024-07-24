@@ -3,6 +3,7 @@ import usersRouters from './routes/users.routes'
 import databaseService from  '~/services/database.services'
 import { defaultErrorHandler } from './middlewares/errors.middleware';
 import tweetsRouter from './routes/tweets.routes';
+import bookmarksRouter from './routes/bookmarks.routes';
 
 databaseService.connect()
 const app = express()
@@ -11,6 +12,7 @@ app.use(express.json())
 
 app.use('/users', usersRouters)
 app.use('/tweets', tweetsRouter)
+app.use('/bookmarks', bookmarksRouter)
 
 //custom default error handler
 app.use(defaultErrorHandler)

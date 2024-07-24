@@ -6,6 +6,7 @@ import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import Follower from '~/models/schemas/Follower.schema';
 import Tweet from '~/models/schemas/Tweet.schema';
 import Hashtag from '~/models/schemas/Hashtags.schema';
+import Bookmark from '~/models/schemas/Bookmarks.schema';
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@test.ckxh0gq.mongodb.net/?retryWrites=true&w=majority&appName=test`;
 
@@ -48,6 +49,9 @@ class DatabaseService{
     }
     get hashtags(): Collection<Hashtag>{
         return this.db.collection(`${process.env.DB_HASHTAGS_COLLECTION}`)
+    }
+    get bookmarks(): Collection<Bookmark>{
+        return this.db.collection(`${process.env.DB_BOOKMARKS_COLLECTION}`)
     }
 
 }
