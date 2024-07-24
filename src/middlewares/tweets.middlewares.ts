@@ -10,7 +10,6 @@ import { validate } from "~/ultils/validation";
 const tweetTypes =  numberEnumToArray(TweetType)
 const tweetAudience =  numberEnumToArray(TweetAudience)
 const mediaType =  numberEnumToArray(MediaType)
-
 export const createTweetValidator = validate(
     checkSchema(
         {
