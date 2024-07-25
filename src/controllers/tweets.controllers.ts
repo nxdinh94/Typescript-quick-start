@@ -18,3 +18,14 @@ export const createTweetController = async (
         result
     })
 }
+export const getTweetController = async (
+    req: Request, 
+    res: Response,
+    next: NextFunction  // To call the next middleware or route handler in the stack
+) => {
+    const {user_id} = req.decoded_authorization as TokenPayload
+    return res.json({
+        message: 'Tweet created successfully',
+    })
+}
+

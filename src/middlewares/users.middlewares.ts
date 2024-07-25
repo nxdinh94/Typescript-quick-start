@@ -247,7 +247,7 @@ export const accessTokenValidator = validate(
                             message : capitalize((error as JsonWebTokenError).message),
                             status:  HTTP_STATUS.UNAUTHORIZED
                         })
-                    }
+                    } 
                     return true
                 }
             },
@@ -493,3 +493,12 @@ export const unFollowValidator  = validate(
         user_id : userIdSchema
     }, ["params"])
 )
+
+export const isUserLoggedInValidator = (middleware: (req: Request, res:Response, next: NextFunction) => void)  => {
+    return (req: Request, res:Response, next: NextFunction)=> { 
+        if(req.headers.authorization){
+            return middleware(req, res, next)
+        }
+        next()
+    }
+}
