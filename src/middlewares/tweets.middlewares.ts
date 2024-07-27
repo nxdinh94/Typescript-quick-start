@@ -125,10 +125,110 @@ export const tweetIdValidator = validate(
                     }
 
                     // check if tweet id exist in database
-                    const tweet = await databaseService.tweets.findOne({
-                        _id: new ObjectId(value)
-                    })
-                    
+                    // use destructuring
+                    const [tweet] = await databaseService.tweets
+                    .aggregate<Tweet>([
+                      {
+                        $match: {
+                          _id: new ObjectId(value)
+                        }
+                      },
+                      {
+                        $lookup: {
+                          from: 'hashtags',
+                          localField: 'hashtags',
+                          foreignField: '_id',
+                          as: 'hashtags'
+                        }
+                      },
+                      {
+                        $lookup: {
+                          from: 'users',
+                          localField: 'mentions',
+                          foreignField: '_id',
+                          as: 'mentions'
+                        }
+                      },
+                      {
+                        $addFields: {
+                          mentions: {
+                            $map: {
+                              input: '$mentions',
+                              as: 'mention',
+                              in: {
+                                _id: '$$mention._id',
+                                name: '$$mention.name',
+                                username: '$$mention.username',
+                                email: '$$mention.email'
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        $lookup: {
+                          from: 'bookmarks',
+                          localField: '_id',
+                          foreignField: 'tweet_id',
+                          as: 'bookmarks'
+                        }
+                      },
+                      {
+                        $lookup: {
+                          from: 'tweets',
+                          localField: '_id',
+                          foreignField: 'parent_id',
+                          as: 'tweet_children'
+                        }
+                      },
+                      {
+                        $addFields: {
+                          bookmarks: {
+                            $size: '$bookmarks'
+                          },
+                          retweet_count: {
+                            $size: {
+                              $filter: {
+                                input: '$tweet_children',
+                                as: 'item',
+                                cond: {
+                                  $eq: ['$$item.type', TweetType.Retweet]
+                                }
+                              }
+                            }
+                          },
+                          comment_count: {
+                            $size: {
+                              $filter: {
+                                input: '$tweet_children',
+                                as: 'item',
+                                cond: {
+                                  $eq: ['$$item.type', TweetType.Comment]
+                                }
+                              }
+                            }
+                          },
+                          quote_count: {
+                            $size: {
+                              $filter: {
+                                input: '$tweet_children',
+                                as: 'item',
+                                cond: {
+                                  $eq: ['$$item.type', TweetType.QuoteTweet]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        $project: {
+                          tweet_children: 0
+                        }
+                      }
+                    ])
+                    .toArray()
+                    console.log(tweet)
                     if(!tweet){
                         throw new ErrorWithStatus({
                             message: TWEET_MESSAGES.TWEET_NOT_FOUND,
@@ -158,8 +258,9 @@ export const audienceValidator = wrapRequestHandler(
         })
       }
       const author = await databaseService.users.findOne({
-        _id: new ObjectId(tweet.user_id)
+        _id: tweet.user_id
       })
+      
       // Kiểm tra tài khoản tác giả có ổn (bị khóa hay bị xóa chưa) không
       if (!author || author.verify === UserVerifyStatus.Banned) {
         throw new ErrorWithStatus({
