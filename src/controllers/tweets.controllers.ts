@@ -23,9 +23,16 @@ export const getTweetController = async (
     res: Response,
     next: NextFunction  // To call the next middleware or route handler in the stack
 ) => {
+    const decoded_authorization = req.decoded_authorization as TokenPayload
+    const result = await tweetsService.increaseView(req.params.tweet_id, decoded_authorization.user_id)
+    const tweet = {
+        ...req.tweet,
+        guest_views: result.guest_views,
+        user_views: result.user_views
+    }
     return res.json({
         message: 'Get Tweet successfully',
-        result : req.tweet
+        result : result
     })
 }
 
