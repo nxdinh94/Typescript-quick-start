@@ -8,8 +8,12 @@ chưa hết hạn thì verify thành công -> gọi api reset-password truyền 
 
 
 
+react-infinite-scroll-component : phân trang
+npm install --save-dev @faker-js/faker: tạo dữ liệu ảo
 
-
-
-
-
+" {
+    '$skip': limit * (page -1 )// pagination formula
+    }, {
+    '$limit': limit
+    }
+]"
