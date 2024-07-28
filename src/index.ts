@@ -4,6 +4,8 @@ import databaseService from  '~/services/database.services'
 import { defaultErrorHandler } from './middlewares/errors.middleware';
 import tweetsRouter from './routes/tweets.routes';
 import bookmarksRouter from './routes/bookmarks.routes';
+// import '~/ultils/faker'
+
 
 databaseService.connect()
 const app = express()

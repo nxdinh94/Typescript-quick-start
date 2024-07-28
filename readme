@@ -17,3 +17,12 @@ npm install --save-dev @faker-js/faker: tạo dữ liệu ảo
     '$limit': limit
     }
 ]"
+
+
+mongo aggregation
+    - $unwind: convert array to objects
+
+how to get new feeds
+- lấy ra 1 mảng id người mình follow, có thể trong đó có mình,
+dùng $lookup sang users để lấy thông tin người đăng, sau đó chuyển array user 
+sang object dùng $unwind, lọc tweet nào có audiance = 0 hoặc (=1 và user.twitter_circle chứa id của mình)
