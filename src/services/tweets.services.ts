@@ -53,7 +53,7 @@ class TweetsService{
             guest_views: 1,
             user_views: 1,
             updated_at: 1
-          }
+          } 
         }
       )
       return result as WithId<{
@@ -63,8 +63,8 @@ class TweetsService{
       }>
     }
     async getTweetChildren(
-      {tweet_id, tweet_type, limit, page} : {
-        tweet_id: string, tweet_type: TweetType, limit: number, page: number
+      {tweet_id, tweet_type, limit, page, user_id} : {
+        tweet_id: string, tweet_type: TweetType, limit: number, page: number, user_id?: string
       }
     ){
       const result = await databaseService.tweets.aggregate<Tweet>(
@@ -147,11 +147,6 @@ class TweetsService{
                     }
                   }
                 }
-              }, 
-              'view': {
-                '$add': [
-                  '$user_views', '$guest_views'
-                ]
               }
             }
           }, {
@@ -165,9 +160,38 @@ class TweetsService{
           }
         ]
       ).toArray()
-      const total_item = await databaseService.tweets.countDocuments({
-        parent_id: new ObjectId(tweet_id),
-        type: tweet_type
+      const ids = result.map(tweet => tweet._id as ObjectId)
+      const inc = user_id ? {user_views : 1} : {guest_views : 1}
+      const date =  new Date()
+      //updateMany doesnot have updated_at
+      const [, total_item] = await Promise.all([
+        databaseService.tweets.updateMany(
+          {
+            // update _id which exists in ids array
+            _id: {
+              $in: ids
+            },
+          },
+          {
+            $inc : inc,
+            $set: {
+              updated_at: date
+            }
+          }
+        ), 
+        databaseService.tweets.countDocuments({
+          parent_id: new ObjectId(tweet_id),
+          type: tweet_type
+        })
+      ]) 
+
+      result.forEach((tweet) => {
+        tweet.updated_at = date  
+        if(user_id){
+          tweet.user_views += 1
+        }else {
+          tweet.guest_views += 1 
+        }
       })
       return {result, total_item} 
     }

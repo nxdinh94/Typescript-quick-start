@@ -27,10 +27,10 @@ export default class Tweet{
     hashtags: ObjectId[]
     mentions: ObjectId[]
     medias: Media[]
-    guest_views?: number
-    user_views?: number
-    created_at?: Date
-    updated_at?: Date
+    guest_views: number
+    user_views: number
+    created_at: Date
+    updated_at: Date
     constructor({_id, user_id, type, audience, content, parent_id, 
         hashtags, mentions, medias, guest_views, user_views, 
         created_at, updated_at
