@@ -2,7 +2,7 @@
 import express, {Request, Response, NextFunction} from 'express';
 import {ParamsDictionary} from 'express-serve-static-core'
 import { TweetType } from '~/constants/enum';
-import { CreateTweetReqBody } from '~/models/requests/tweets.requests';
+import { CreateTweetReqBody, TweetParam, TweetQuery } from '~/models/requests/tweets.requests';
 import { TokenPayload } from '~/models/requests/User.requests';
 import tweetsService from '~/services/tweets.services';
 
@@ -38,13 +38,12 @@ export const getTweetController = async (
     })
 }
 export const getTweetChildrenController = async (
-    req: Request, 
+    req: Request<TweetParam, any, any, TweetQuery>, 
     res: Response,
-    next: NextFunction  // To call the next middleware or route handler in the stack
 ) => {
     const tweet_type = Number(req.query.tweet_type as string) as TweetType
-    const limit = Number(req.query.limit as string)
-    const page = Number(req.query.page as string)
+    const limit = Number(req.query.limit)
+    const page = Number(req.query.page)
     const user_id = req.decoded_authorization?.user_id
     const {result, total_item} = await tweetsService.getTweetChildren({
         tweet_id: req.params.tweet_id, 
