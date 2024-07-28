@@ -195,6 +195,25 @@ class TweetsService{
       })
       return {result, total_item} 
     }
+    async getNewFeeds({user_id, limit, page} :{
+      user_id: string, limit: number, page: number 
+    }){
+      const results = await  databaseService.followers.find({
+        user_id: new ObjectId(user_id),
+      },{
+        projection:{
+          followed_user_id: 1,
+          _id: 0
+        }
+      }).toArray()
+      const followed_user_id =  results.map((item)=>{
+        return item.followed_user_id;
+      })
+      //Mong muon newfeeds se lay luon tweets cua minh
+      followed_user_id.push(new ObjectId(user_id))
+      return followed_user_id;
+    }
+
 }
 const tweetsService = new TweetsService();
 
